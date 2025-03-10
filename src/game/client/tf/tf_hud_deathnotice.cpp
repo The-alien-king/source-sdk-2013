@@ -802,6 +802,13 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 		// if there was an assister, put both the killer's and assister's names in the death message
 		int iAssisterID = engine->GetPlayerForUserID( event->GetInt( "assister" ) );
 
+		// If the victim and the assister are the same person, set the assister to null.
+		// This can happen if a disguised spy backstabs a medic while they are healing the spy.
+		if ( iVictimID == iAssisterID )
+		{
+			iAssisterID = null;
+		}
+		
 		EHorriblePyroVisionHack ePyroVisionHack = kHorriblePyroVisionHack_KillAssisterType_Default;
 		CUtlConstString sAssisterNameScratch;
 		const char *assister_name = ( iAssisterID > 0 ? g_PR->GetPlayerName( iAssisterID ) : NULL );
